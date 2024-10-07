@@ -8,9 +8,9 @@ Deep Learning for Computer Vision -  Fall 2020
         <div align= "center">
         <img src ="readme_image/weight_matrix.png" height = 50% width = 50%>
         </div>
+        
         - The matrix dW represents the gradient (derivative) of the loss with respect to the weight matrix W.
-
-        - $$\text{loss}_i = \frac{1}{N}\max(0, \text{scores}[j]_{j \neq y[i]} - \text{scores}[y[i]])$$
+        - $$loss_i = \frac{1}{N}\max(0, \text{scores}[j]_{j \neq y[i]} - \text{scores}[y[i]])$$
         for each wrong score of the class that contribute to the loss, the score of the correct class is all subtracted, so dw need to subtract x[i] everytime fingding a wrong score
     - ### Softmax
         - normalize the scores of each class, turning it into probabilities
