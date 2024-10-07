@@ -109,12 +109,12 @@ def svm_loss_naive(W, X, y, reg):
     # W is the transpose of the W in Lecture 3
 
     # compute the loss and the gradient
-    num_classes = W.shape[1]
-    num_train = X.shape[0]
+    num_classes = W.shape[1] # D
+    num_train = X.shape[0] # C
     loss = 0.0
     for i in range(num_train):
-        scores = W.t().mv(X[i])  # W.t() is the correct shape as the Lecture 3
-        correct_class_score = scores[y[i]]
+        scores = W.t().mv(X[i])  # W.t() is the correct shape as the Lecture 3, X[i] is one image in the minibatch
+        correct_class_score = scores[y[i]] # find the score of the correct label
         for j in range(num_classes):
             if j == y[i]:  # skip the correct class
                 continue
@@ -129,10 +129,9 @@ def svm_loss_naive(W, X, y, reg):
                 # that the loss is being computed.                                    #
                 #######################################################################
                 # Replace "pass" statement with your code
-
                 # for the wrong class with high score, we need to penalize it by adding the gradient(making it lower faster)
-                dW[:, j] += X[i]  # because dscore[j]/dwk = xk
-                # for the correct class we want to decrease the gradient
+                dW[:, j] += X[i]  # because dscore[j] / dwk = xk
+                # for the correct class we want to decrease the gradient everytime we find an incorrect one to maximize the diff
                 dW[:, y[i]] -= X[i]
                 #######################################################################
                 #                       END OF YOUR CODE                              #
@@ -191,11 +190,11 @@ def svm_loss_vectorized(W, X, y, reg):
     scores = torch.matmul(X, W)  # shape(N, C), N examples, C classes
     correct_class_score = scores[range(num_train), y].unsqueeze(-1)  # shape(N, 1)
 
-    margins = (scores - correct_class_score + 1 - torch.nn.functional.one_hot(y,
-                                                                              num_classes)).relu()  # remove those < 0, shape(N, C)
+    # relu remove the element that's less than 0
+    margins = (scores - correct_class_score + 1 - torch.nn.functional.one_hot(y, num_classes)).relu()
+    # using the one_hot because of the +1 operation, need to subtract that from the correct class
 
-    loss = margins.sum(
-        -1).mean()  # sum according to classes, forming a shape(N,) means the loss of each train example, then mean
+    loss = margins.sum(-1).mean()  # sum according to classes, forming a shape(N,) means the loss of each train example, then mean
     loss += reg * torch.sum(W * W)
     #############################################################################
     #                             END OF YOUR CODE                              #
@@ -213,11 +212,12 @@ def svm_loss_vectorized(W, X, y, reg):
     # Replace "pass" statement with your code
     binary = margins  # (N, C)
     binary[margins > 0] = 1  # select the incorrect classes where margin violate the SVM
-    row_sum = binary.sum(1)  # sum the total classes that violate
+    row_sum = binary.sum(1)  # sum the total classes that contribute to the loss
     binary[range(num_train), y] = -row_sum
 
+    # add the x[i] and subtract the x[i]
     dW = torch.matmul(X.T, binary) / num_train  # X.T (D, N) * (N, C)
-    dW += reg * 2 * W  # regularization
+    dW += 2 * reg * W  # regularization
     #############################################################################
     #                             END OF YOUR CODE                              #
     #############################################################################
@@ -459,20 +459,20 @@ def softmax_loss_naive(W, X, y, reg):
     num_train = X.shape[0]  # N
     for i in range(num_train):
         scores = W.t().mv(X[i])  # (C, D) * (D, ) -> (C,) The score for each class in one train example
-        scores = scores - scores.max()  # Prevent the overflow, subtracting keep the probability the same
+        scores = scores - scores.max()  # Prevent the overflow, subtracting from every element(not affect the prob)
 
-        softmax = scores - scores.logsumexp(
-            -1)  # also prevent overflow, do the log before computing, and sum them all for computing the probibilities
-        prob = softmax.exp()  # revert the log operation, also making it divided
-        # it's trying to maximun the prob of the correct class
-        loss -= softmax[y[i]]  # Li = -log(P(the correct catagory)) Maximum Likelihood Estimation, check later
+        # in softmax log(softmax) = s_j - logsumexp
+        softmax = scores - scores.logsumexp(-1) # exp -> sum -> log
+        prob = softmax.exp()
+        loss -= softmax[y[i]]  # Maximum Likelihood Estimation
 
-        # using Cross-Entropy
+        # gradient
         for j in range(num_class):
-            coef = prob[j] - (1 if j == y[i] else 0)
-            dW[:, j] += coef * X[i]  # derivative
+            coef = prob[j] - (1 if j == y[i] else 0) # correct class supposed to be 1, otherwise should be 0
+            dW[:, j] += coef * X[i]  # derivative with respect to w[:, j] (A class)
 
     loss /= num_train
+    # regularization term is independent of the X, it's fine to do after computing dw
     loss += reg * torch.sum(W * W)
     dW /= num_train
     dW += reg * 2 * W
@@ -506,14 +506,15 @@ def softmax_loss_vectorized(W, X, y, reg):
     num_classes = W.shape[1] # C
     num_train = X.shape[0] # N
     scores = torch.matmul(X, W) # (N, C)
-    scores = scores - scores.max(-1, True).values
+    scores = scores - scores.max(-1, True).values # max value in each row
+
     softmax = scores - scores.logsumexp(-1, True)
     loss = -softmax[range(num_train), y].mean()
     loss += reg * torch.sum(W * W)
 
     prob = softmax.exp() # (N, C)
     mask = prob - torch.nn.functional.one_hot(y, prob.shape[1])
-    dW = torch.matmul(X.T, mask) / num_train # (D, N) * (N, C) and get the average
+    dW = torch.matmul(X.T, mask) / num_train # (D, N) * (N, C)
     dW += reg * 2 * W  # regularization
     #############################################################################
     #                          END OF YOUR CODE                                 #
