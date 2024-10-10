@@ -11,35 +11,23 @@ Deep Learning for Computer Vision -  Fall 2020
         </div>
         
         - The matrix dW represents the gradient (derivative) of the loss with respect to the weight matrix W.
-       - $$
-            loss_i = \frac{1}{N}\max(0, \text{scores}[j]_{j \neq y[i]} - \text{scores}[y[i]])
-        $$
+       - $$loss_i = \frac{1}{N}\max(0, \text{scores}[j]_{j \neq y[i]} - \text{scores}[y[i]])$$
+         
         for each wrong score of the class that contribute to the loss, the score of the correct class is all subtracted, so dw need to subtract x[i] everytime fingding a wrong score
     - ### Softmax
         - normalize the scores of each class, turning it into probabilities
-        - $$
-            P(y = j \mid \mathbf{x}) = \frac{e^{s_j}}{\sum_{k=1}^C e^{s_k}}
-        $$
-          $$
-            L = \frac{1}{N}L_i = \frac{1}{N} \sum_{i=1}^N -\log(P(Y = y_i \mid x_i))
-        $$
+        - $$P(y = j \mid \mathbf{x}) = \frac{e^{s_j}}{\sum_{k=1}^C e^{s_k}}$$
+          $$L = \frac{1}{N}L_i = \frac{1}{N} \sum_{i=1}^N -\log(P(Y = y_i \mid x_i))$$
         - in the code:
-            $$
-            \log\left(\frac{e^{s_j}}{\sum_{k=1}^C e^{s_k}}\right) = s_j - \log\left(\sum_{k=1}^C e^{s_k}\right)
-            $$
-            $$
-            \frac{\partial L}{\partial W[:,j]} = X[i] \times (prob_j - true\_label_j)
-            $$
+            $$\log\left(\frac{e^{s_j}}{\sum_{k=1}^C e^{s_k}}\right) = s_j - \log\left(\sum_{k=1}^C e^{s_k}\right)$$
+            $$\frac{\partial L}{\partial W[:,j]} = X[i] \times (prob_j - true\_label_j)$$
     - ### Two_layer_network
         - #### layer1
-        $$
-        z_1 = X W_1 + b_1 \quad \text{(pre-activation)} \\
-        h_1 = \operatorname{ReLU}(z_1) \quad \text{(activation using ReLU)}
-        $$
+        $$z_1 = X W_1 + b_1 \quad \text{(pre-activation)}$$
+      
+        $$h_1 = \text{ReLU}(z_1) \quad \text{(activation using ReLU)}$$
         - #### layer2
-        $$
-        z_2 = h_1 W_2 + b_2 \quad \text{(final scores for each class)}
-        $$
+        $$z_2 = h_1 W_2 + b_2 \quad \text{(final scores for each class)}$$
     - Nonelinear activation function: do the non-linear work and also preserve the gradient work
     - ### Backpropagation
         - Getting the gradient
