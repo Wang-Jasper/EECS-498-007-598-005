@@ -1,7 +1,7 @@
 # **EECS-498-007-598-005**
 Deep Learning for Computer Vision -  Fall 2020
 
-## Notes
+## Assignment Notes
 - A1 : KNN
     - split the dataset into 3 parts for train, validation and test. Choose hyperparameters on train and val. Try on test set only once in the end. This is to prevent the model polluted by the test set.
 - A2 : linear classifier, two layer network
@@ -32,33 +32,41 @@ Deep Learning for Computer Vision -  Fall 2020
     - ### Backpropagation
         - Getting the gradient
         - Getting higher-order derivative 
-    - ### Data processing : for better process
-        - pre-processing
-    - ### Weight init : Xavier init : for gradient to behave well
-        - ReLU correction
-        - ResNet
-    - ### Regularization : prevent overfitting
-        - Dropout : large FC layers(many hyperparameters)
-        - batch norm, L2 : always works
-        - random crop ,scale, cutup, mixup : small dataset
-        - ......
-    - ### Learning Rate Schedule : Start with higer learning rate and decay, complicate optimizer recommend constant
-        - Step Schedule
-        - Cosine, linear
-        - constant
-    - ### Choosing Hyperparameters
-        - Grid Search, Random search(better)
-        - tensor board to plot
-        - track weight update / weight magnitude(=0.01 about okay)
-        - #### without access to many GPUs:
-            - build a right model by checking initial loss(if that's correct for random hyperparameters), overfit a small example, find learning rate make loss go down quickly, corase gird for 1~5 epochs, refine grid and train longer, and change hp by looking at learning curves(loss/iteration, train and val accuracy), and again refine grid
-    - ### After training:
-        - train multiple independent models(or have different check points in 1 model) and average the test result (2% extra)
-        - Ployak averaging: or keep a moving average of parameters during training and use it for the test time
-    - ### Transfer learning: models on imageNet tends to also work well on other dataset 
-        - use other dataset to extract features then apply model to another dataset to train (use CNN as featrue extractor)
-        - Fine-tuning for larger dataset : continue training CNN after feature extracted and get new layers on top of that, tricks: train with feature extration before fine-tuning, lower LR, freeze lower layer save the computation
-    - ### Distributed training : tons of GPUs
-        - data parallelism: split data
+- A3 : fully connected layer
+    - Matrix calculus : why the derivative need to be transposed
+    $$out_{ij} = \sum_{k} X_{ik} W_{kj}$$
+    $$\frac{\partial L}{\partial X} = \frac{\partial \text{out}}{\partial X} \cdot \frac{\partial L}{\partial \text{out}}$$
+    - Modular forward and backward function
+    - Update rules for Weight Matrix : SGD, SGD + Momentum, RMSProp, Adam
+
+## Lecture Notes
+- ### Data processing : for better process
+    - pre-processing
+- ### Weight init : Xavier init : for gradient to behave well
+    - ReLU correction
+    - ResNet
+- ### Regularization : prevent overfitting
+    - Dropout : large FC layers(many hyperparameters)
+    - batch norm, L2 : always works
+    - random crop ,scale, cutup, mixup : small dataset
+    - ......
+- ### Learning Rate Schedule : Start with higer learning rate and decay, complicate optimizer recommend constant
+    - Step Schedule
+    - Cosine, linear
+    - constant
+- ### Choosing Hyperparameters
+    - Grid Search, Random search(better)
+    - tensor board to plot
+    - track weight update / weight magnitude(=0.01 about okay)
+    - #### without access to many GPUs:
+        - build a right model by checking initial loss(if that's correct for random hyperparameters), overfit a small example, find learning rate make loss go down quickly, corase gird for 1~5 epochs, refine grid and train longer, and change hp by looking at learning curves(loss/iteration, train and val accuracy), and again refine grid
+- ### After training:
+    - train multiple independent models(or have different check points in 1 model) and average the test result (2% extra)
+    - Ployak averaging: or keep a moving average of parameters during training and use it for the test time
+- ### Transfer learning: models on imageNet tends to also work well on other dataset 
+    - use other dataset to extract features then apply model to another dataset to train (use CNN as featrue extractor)
+    - Fine-tuning for larger dataset : continue training CNN after feature extracted and get new layers on top of that, tricks: train with feature extration before fine-tuning, lower LR, freeze lower layer save the computation
+- ### Distributed training : tons of GPUs
+    - data parallelism: split data
 
         
