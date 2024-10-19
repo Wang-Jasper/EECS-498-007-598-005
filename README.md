@@ -32,13 +32,27 @@ Deep Learning for Computer Vision -  Fall 2020
     - ### Backpropagation
         - Getting the gradient
         - Getting higher-order derivative 
-- A3 : fully connected layer
-    - Matrix calculus : why the derivative need to be transposed
+- A3 : fully connected layer, convolutional networks
+    - ### Matrix calculus : why the derivative need to be transposed
     $$out_{ij} = \sum_{k} X_{ik} W_{kj}$$
     $$\frac{\partial L}{\partial X} = \frac{\partial \text{out}}{\partial X} \cdot \frac{\partial L}{\partial \text{out}}$$
     - Modular forward and backward function
     - Update rules for Weight Matrix : SGD, SGD + Momentum, RMSProp, Adam
-
+    - ### Convolutional backward
+        - db
+        $$
+        \frac{\partial L}{\partial b_f} = \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} 
+        \frac{\partial L}{\partial y_{n,f,h,w}} \cdot \frac{\partial y_{n,f,h,w}}{\partial b_f}
+        $$
+        $$
+        = \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} \frac{\partial y_{n,f,h,w}}{\partial L} = \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} d_{\text{out}}[n,f,h,w]
+        $$
+    - ### Kaiming initialization
+        - small variance of weights likely to have small numbers of weights
+    - ### Batch Normalization : help train deeper network
+        - standardizes the input to each layer by ensuring that the activations have zero mean and unit variance. This helps stabilize the training by reducing internal covariate shift, making the learning process smoother and faster.
+        - scaling and shifting operation allows the network to recover the representational power of the layer, as if batch normalization hadn't been applied, but with the benefits of stable training. Also helps the network to be less dependent to learning rate
+        - spatial bath norm
 ## Lecture Notes
 - ### Data processing : for better process
     - pre-processing
