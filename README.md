@@ -40,13 +40,11 @@ Deep Learning for Computer Vision -  Fall 2020
     - Update rules for Weight Matrix : SGD, SGD + Momentum, RMSProp, Adam
     - ### Convolutional backward
         - db
-        $$
-        \frac{\partial L}{\partial b_f} = \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} 
-        \frac{\partial L}{\partial y_{n,f,h,w}} \cdot \frac{\partial y_{n,f,h,w}}{\partial b_f}
-        $$
-        $$
-        = \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} \frac{\partial y_{n,f,h,w}}{\partial L} = \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} d_{\text{out}}[n,f,h,w]
-        $$
+      
+            $$\frac{\partial L}{\partial b_f} = \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} 
+            \frac{\partial L}{\partial y_{n,f,h,w}} \cdot \frac{\partial y_{n,f,h,w}}{\partial b_f}$$
+
+             $$= \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} \frac{\partial y_{n,f,h,w}}{\partial L} = \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} d_{\text{out}}[n,f,h,w]$$
     - ### Kaiming initialization
         - small variance of weights likely to have small numbers of weights
     - ### Batch Normalization : help train deeper network
