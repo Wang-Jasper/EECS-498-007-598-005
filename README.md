@@ -40,11 +40,10 @@ Deep Learning for Computer Vision -  Fall 2020
     - Update rules for Weight Matrix : SGD, SGD + Momentum, RMSProp, Adam
     - ### Convolutional backward
         - db
-      
-            $$\frac{\partial L}{\partial b_f} = \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} 
-            \frac{\partial L}{\partial y_{n,f,h,w}} \cdot \frac{\partial y_{n,f,h,w}}{\partial b_f}$$
+        $$\frac{\partial L}{\partial b_f} = \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} 
+        \frac{\partial L}{\partial y_{n,f,h,w}} \cdot \frac{\partial y_{n,f,h,w}}{\partial b_f}$$
 
-             $$= \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} \frac{\partial y_{n,f,h,w}}{\partial L} = \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} d_{\text{out}}[n,f,h,w]$$
+        $$= \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} \frac{\partial y_{n,f,h,w}}{\partial L} = \sum_{n=1}^{N} \sum_{h=1}^{H_{\text{out}}} \sum_{w=1}^{W_{\text{out}}} d_{\text{out}}[n,f,h,w]$$
     - ### Kaiming initialization
         - small variance of weights likely to have small numbers of weights
     - ### Batch Normalization : help train deeper network
@@ -80,5 +79,7 @@ Deep Learning for Computer Vision -  Fall 2020
     - Fine-tuning for larger dataset : continue training CNN after feature extracted and get new layers on top of that, tricks: train with feature extration before fine-tuning, lower LR, freeze lower layer save the computation
 - ### Distributed training : tons of GPUs
     - data parallelism: split data
-
-        
+- ### RNN : Lecture 12, Vanilla RNN, LSTM
+    - Truncated Backprogation Through Time : solve too much use of memory in backprogation https://gist.github.com/karpathy/d4dee566867f8291f086
+    - Gradient clipping : scale gradient to prevent exploding gradient if multipling matrix too big for many times in backprogation
+    - for small matix causing gradient vanished : change RNN architecture
